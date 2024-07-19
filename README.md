@@ -1,1 +1,1 @@
-Full stack course provided by University of Helsinki
+Full stack course by [University of Helsinki]([url](https://fullstackopen.com/en/))
