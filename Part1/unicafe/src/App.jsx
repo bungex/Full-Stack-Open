@@ -1,17 +1,30 @@
 import { useState } from 'react'
 
 const Statistics = ({good, neutral, bad, all, avg, pos}) => {
-  return(
-    <>
+
+  if (good === 0 && neutral === 0 && bad === 0) {
+    return(
+      <>
       <h2>Statistics</h2>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>All: {all}</p>
-      <p>Average: {avg}</p>
-      <p>Postivie: {pos}%</p>
-    </>
-  )
+      <p>No feedback given</p>
+      </>
+    )
+  }
+  else{
+    return (
+      <>
+        <h2>Statistics</h2>
+        <p>Good: {good}</p>
+        <p>Neutral: {neutral}</p>
+        <p>Bad: {bad}</p>
+        <p>All: {all}</p>
+        <p>Average: {avg}</p>
+        <p>Postivie: {pos}%</p>
+      </>
+    )
+
+  }
+
 }
 
 const App = () => {
