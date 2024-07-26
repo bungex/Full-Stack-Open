@@ -29,19 +29,19 @@ const Statistics = ({good, neutral, bad, all, avg, pos}) => {
 
 const StatisticsLine = (props) => {
   return(
-    <div>
-      <p>{props.text}: {props.value} </p>
-    </div>
+      <table>
+        <tbody>
+          <tr>
+              <td>{props.text}:</td>
+              <td>{props.value}</td>
+          </tr>
+        </tbody>
+      </table>
   )
 }
 
-const Button = (props) => {
-  return (
-    <div>
-      <button onClick={() => props.onClick(props.id)}> {props.text} </button>
-    </div>
-  )
-}
+const Button = (props) => <button onClick={() => props.onClick(props.id)}> {props.text} </button>
+
 
 const App = () => {
   // save clicks of each button to its own state
@@ -49,8 +49,8 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
   const all = good + neutral + bad
-  const avg = (good - bad) / all
-  const pos = (good / all) * 100
+  const avg = ((good - bad) / all).toFixed(2)
+  const pos = ((good / all) * 100).toFixed(2) + " %"
 
   const handleClick = (id) => {
     if (id === '1') {
@@ -72,6 +72,7 @@ const App = () => {
       <Button text='Neutral' onClick={handleClick} id='2'></Button>
       <Button text='Bad' onClick={handleClick} id='3'></Button>
       <Statistics good={good} bad={bad} neutral={neutral} avg={avg} pos={pos} all={all}></Statistics>
+
     </div>
   )
 }
