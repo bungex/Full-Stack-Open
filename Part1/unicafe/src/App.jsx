@@ -14,17 +14,33 @@ const Statistics = ({good, neutral, bad, all, avg, pos}) => {
     return (
       <>
         <h2>Statistics</h2>
-        <p>Good: {good}</p>
-        <p>Neutral: {neutral}</p>
-        <p>Bad: {bad}</p>
-        <p>All: {all}</p>
-        <p>Average: {avg}</p>
-        <p>Postivie: {pos}%</p>
+        <StatisticsLine text='Good' value={good}></StatisticsLine>
+        <StatisticsLine text='Neutral' value={neutral}></StatisticsLine> 
+        <StatisticsLine text='Bad' value={bad}></StatisticsLine> 
+        <StatisticsLine text='All' value={all}></StatisticsLine> 
+        <StatisticsLine text='Average' value={avg}></StatisticsLine> 
+        <StatisticsLine text='Positive' value={pos} > </StatisticsLine> 
       </>
     )
 
   }
 
+}
+
+const StatisticsLine = (props) => {
+  return(
+    <div>
+      <p>{props.text}: {props.value} </p>
+    </div>
+  )
+}
+
+const Button = (props) => {
+  return (
+    <div>
+      <button onClick={() => props.onClick(props.id)}> {props.text} </button>
+    </div>
+  )
 }
 
 const App = () => {
@@ -36,14 +52,26 @@ const App = () => {
   const avg = (good - bad) / all
   const pos = (good / all) * 100
 
+  const handleClick = (id) => {
+    if (id === '1') {
+      setGood(good + 1)      
+    }
+    else if (id === '2') {
+      setNeutral(neutral + 1)
+    } 
+    else {
+      setBad(bad + 1)
+    }
+  }
+
 
   return (
     <div>
       <h1> Give Feedback</h1>
-      <button onClick={() => setGood(good + 1)}>Neutral</button>
-      <button onClick={() => setNeutral(neutral + 1)}>Neutral</button>
-      <button onClick={() => setBad(bad + 1)}>Bad</button>
-      <Statistics good={good} bad={bad} neutral={neutral} avg={avg} pos={pos}></Statistics>
+      <Button text='Good' onClick={handleClick} id="1"></Button>
+      <Button text='Neutral' onClick={handleClick} id='2'></Button>
+      <Button text='Bad' onClick={handleClick} id='3'></Button>
+      <Statistics good={good} bad={bad} neutral={neutral} avg={avg} pos={pos} all={all}></Statistics>
     </div>
   )
 }
