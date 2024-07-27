@@ -1,20 +1,34 @@
 const Course = ({course}) => {
   // const r = course.parts.map(x => x.name)
-  // console.log(course.parts)
+  // console.log(course.parts.map(x => x.exercises))
 
   return(
     <>
       <Header header={course.name}/>
-      <Part part={course.parts}/> 
+      <Content part={course.parts}/>
+      <Total part={course.parts} />
     </>
   )
 }
 
-const Part = ({part}) => {
+const Total = ({part}) => {
+  // console.log(part.map(x => x.exercises))
+  const sum = part.reduce((next, curr) => ({exercises: next.exercises + curr.exercises}))
+
   return(
-    <>
+    <ul>
+      <li>
+          Total number of {sum.exercises} exercises.
+      </li>
+    </ul>
+  )
+}
+
+const Content = ({part}) => {
+  return(
+    <ul>
        {part.map(x => <li key={x.id}> {x.name}: {x.exercises}</li>)} 
-    </>
+    </ul>
   )
 }
 
@@ -46,6 +60,12 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      }
+      ,
+      {
+        name: 'Use of Map',
+        exercises: 5,
+        id: 5
       }
     ]
   }
