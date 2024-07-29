@@ -1,0 +1,13 @@
+Fetch data from json server:
+    - use axios library 
+        -npm install axios
+        -npm install json-server --save-dev
+    - Make sure the json server is running
+    - to connect to external machines, implement useEffect hook
+        ex: useEffect(() => {
+                axios
+                .get('url here')
+                .then(response => {
+                    console.log('response.data')
+                })
+            }, []) 
