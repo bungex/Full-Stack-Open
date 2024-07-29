@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Search from './components/Search'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -9,6 +10,7 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState('')
+  const [find, setFind] = useState('')
 
   const addName = (event) => {
     event.preventDefault()
@@ -38,10 +40,20 @@ const App = () => {
     setNewNum(event.target.value)
   }
 
+  const handlFind = (event) => {
+    setFind(event.target.value)
+  }
+  
+
+  const personsToShow = persons.filter(person =>
+    person.name.toLowerCase().includes(find.toLowerCase())
+  )
 
   return (
     <div>
       <h2>Phonebook</h2>
+     <Search find={find} handle={handlFind}/>
+      <h2>Add a new</h2>
       <form onSubmit={addName}>
         <div>
           Name: 
@@ -62,7 +74,7 @@ const App = () => {
       <h2>Numbers</h2>
 
       <div>
-        {persons.map(p => <div key={p.id}> {p.name}: {p.number} </div>)}
+        {personsToShow.map(p => <div key={p.id}> {p.name}: {p.number} </div>)}
       </div>
     </div>
    
