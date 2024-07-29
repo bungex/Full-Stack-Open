@@ -22,6 +22,8 @@ const App = () => {
       })
   }, [])  
 
+
+
   const addName = (event) => {
     event.preventDefault()
     console.log('clicked', event.target)
@@ -34,13 +36,20 @@ const App = () => {
       const nameObject = {
         name: newName,
         number: newNum,
-        id: String(persons.length + 1)
       }
-      setPersons(persons.concat(nameObject))
+
+      axios
+      .post('http://localhost:3001/persons', nameObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
         setNewName('')
         setNewNum('')
+      })
+
       }
   }
+
+
 
   const handleNewName = (event) =>{
     setNewName(event.target.value)
