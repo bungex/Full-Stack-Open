@@ -22,13 +22,32 @@ const App = () => {
 
 
 
-  const addName = (event) => {
-    event.preventDefault()
-    console.log('clicked', event.target)
+  const addName = () => {
+    // event.preventDefault()
 
 // persons.some(e => e.name === newName
     if (persons.some(e => e.name === newName)) {
-      alert(`${newName} is alredy added to phonebook`)
+      const updateFlag = window.confirm(`${newName} is alredy added to phonebook, replace the old number with a new one?`)
+      if (updateFlag){
+        const personToUpdate = persons.find(e => e.name === newName)
+        console.log(personToUpdate.id)
+
+        const updatedPerson = {
+          ...personToUpdate,
+          number: newNum
+        }
+        personService
+          .updateNumber(updatedPerson.id, updatedPerson)
+          .then(response => {
+            // console.log(response.data)
+            setPersons(persons.map(p => p.id !== updatedPerson.id ? p : response.data))
+          })
+          .catch(error => alert(`${error}`))
+
+      }
+      else{
+        alert(`Canceled`)
+      }
     }
     else{
       const nameObject = {
@@ -43,7 +62,7 @@ const App = () => {
         setNewName('')
         setNewNum('')
       })
-
+      .catch(error => console.log(error))
       }
   }
 
@@ -63,8 +82,9 @@ const App = () => {
 
   const handleRemove = (p) => {
     const personToRemove = persons.find(x => x.id === p.id)
-    console.log(personToRemove.id)
-    if (window.confirm(`${p.name} ${p.id} Delete this entry?`)) {
+    // console.log(personToRemove.id)
+    const confirmFlag = window.confirm(`${p.name} ${p.id} Delete this entry?`)
+    if (confirmFlag) {
       personService
         .remove(personToRemove.id)
         .then(() => {
@@ -75,15 +95,14 @@ const App = () => {
         .catch(error => alert(`${error}`))
     }
     else(
-      console.log(alert('Deletation canceled'))
+      console.log('Deletation canceled')
     )
     
 
 }
   
 
-  const personsToShow = persons.filter(person =>
-    person.name.toLowerCase().includes(find.toLowerCase())
+  const personsToShow = persons.filter(person => person.name.toLowerCase().includes(find.toLowerCase())
     
   )
 
