@@ -22,8 +22,8 @@ const App = () => {
 
 
 
-  const addName = () => {
-    // event.preventDefault()
+  const addName = (event) => {
+    event.preventDefault()
 
 // persons.some(e => e.name === newName
     if (persons.some(e => e.name === newName)) {
@@ -38,9 +38,11 @@ const App = () => {
         }
         personService
           .updateNumber(updatedPerson.id, updatedPerson)
-          .then(response => {
+          .then(returnedPerson => {
             // console.log(response.data)
-            setPersons(persons.map(p => p.id !== updatedPerson.id ? p : response.data))
+            setPersons(persons.map(p => p.id !== updatedPerson.id ? p : returnedPerson))
+            setNewName('')
+            setNewNum('')
           })
           .catch(error => alert(`${error}`))
 
