@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Search from './components/Search'
 import AddNew from './components/AddNew'
 import Persons from './components/Persons'
-import axios from 'axios'
+import personService from './services/person'
 
 const App = () => {
 
@@ -13,12 +13,10 @@ const App = () => {
 
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('sucess')
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialData => {
+        setPersons(initialData)
       })
   }, [])  
 
@@ -38,10 +36,10 @@ const App = () => {
         number: newNum,
       }
 
-      axios
-      .post('http://localhost:3001/persons', nameObject)
+      personService
+      .create(nameObject)
       .then(response => {
-        setPersons(persons.concat(response.data))
+        setPersons(persons.concat(response))
         setNewName('')
         setNewNum('')
       })
@@ -62,10 +60,31 @@ const App = () => {
   const handlFind = (event) => {
     setFind(event.target.value)
   }
+
+  const handleRemove = (p) => {
+    const personToRemove = persons.find(x => x.id === p.id)
+    console.log(personToRemove.id)
+    if (window.confirm(`${p.name} ${p.id} Delete this entry?`)) {
+      personService
+        .remove(personToRemove.id)
+        .then(() => {
+          const updatedPerson = persons.filter(person => person.id !== p.id)
+          setPersons(updatedPerson)
+          alert(`${personToRemove.name} was successfully removed`)
+        })
+        .catch(error => alert(`${error}`))
+    }
+    else(
+      console.log(alert('Deletation canceled'))
+    )
+    
+
+}
   
 
   const personsToShow = persons.filter(person =>
     person.name.toLowerCase().includes(find.toLowerCase())
+    
   )
 
   return (
@@ -76,8 +95,11 @@ const App = () => {
       <h2>Add a new</h2>
       <AddNew addName={addName} newName={newName} newNum={newNum} handleNewName={handleNewName} handleNewNum={handleNewNum}/>
       <h2>Numbers</h2>
-      <Persons content={personsToShow}/>
-
+      <div>
+        {personsToShow.map(p =>
+          <Persons key={p.id} content={p} handleRemove={ () => handleRemove(p)}/>
+        )}
+      </div>
     </div>
    
   )

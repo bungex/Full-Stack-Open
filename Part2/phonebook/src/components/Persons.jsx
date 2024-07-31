@@ -1,7 +1,9 @@
-const Persons = ({content}) => {
+const Persons = ({content, handleRemove}) => {
+
     return(
-        <div>
-            {content.map(p => <div key={p.id}> {p.name}: {p.number} </div>)}
+        <div key={content.id}>
+            {content.name}: {content.number}
+            <button onClick={handleRemove}> Delete </button>
         </div>
     )
 }
