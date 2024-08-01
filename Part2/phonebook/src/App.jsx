@@ -4,12 +4,34 @@ import AddNew from './components/AddNew'
 import Persons from './components/Persons'
 import personService from './services/person'
 
+const Notification = ({ message, type }) => {
+
+  let display = 'success'
+  if (type === 2){
+    display = 'error'
+  }
+
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={display}>
+      {message}
+    </div>
+  )
+}
+
+
+
 const App = () => {
 
   const  [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState('')
   const [find, setFind] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [typeOfMessage, setTypeOfMessage] =  useState(0)
 
 
   useEffect(() => {
@@ -24,8 +46,6 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-
-// persons.some(e => e.name === newName
     if (persons.some(e => e.name === newName)) {
       const updateFlag = window.confirm(`${newName} is alredy added to phonebook, replace the old number with a new one?`)
       if (updateFlag){
@@ -39,7 +59,10 @@ const App = () => {
         personService
           .updateNumber(updatedPerson.id, updatedPerson)
           .then(returnedPerson => {
-            // console.log(response.data)
+            setNotification(`Successfully updated ${returnedPerson.name} number`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 3500)
             setPersons(persons.map(p => p.id !== updatedPerson.id ? p : returnedPerson))
             setNewName('')
             setNewNum('')
@@ -60,6 +83,11 @@ const App = () => {
       personService
       .create(nameObject)
       .then(response => {
+        setTypeOfMessage(1)
+        setNotification(`Successfully added ${response.name} to the phonebook`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 3500)
         setPersons(persons.concat(response))
         setNewName('')
         setNewNum('')
@@ -90,11 +118,19 @@ const App = () => {
       personService
         .remove(personToRemove.id)
         .then(() => {
+          setTypeOfMessage(1)
           const updatedPerson = persons.filter(person => person.id !== p.id)
           setPersons(updatedPerson)
           alert(`${personToRemove.name} was successfully removed`)
         })
-        .catch(error => alert(`${error}`))
+        .catch(() => {
+          setTypeOfMessage(2)
+          setNotification(`Information of ${personToRemove.name} was alredy removed form server`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 3500)
+          setPersons(persons.filter(p => p.id !== personToRemove.id))
+        })
     }
     else(
       console.log('Deletation canceled')
@@ -110,8 +146,8 @@ const App = () => {
 
   return (
     <div>
-      
       <h2>Phonebook</h2>
+      <Notification message={notification} type={typeOfMessage}/>
       <Search find={find} handle={handlFind}/>
       <h2>Add a new</h2>
       <AddNew addName={addName} newName={newName} newNum={newNum} handleNewName={handleNewName} handleNewNum={handleNewNum}/>
